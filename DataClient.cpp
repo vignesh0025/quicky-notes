@@ -1,5 +1,6 @@
 #include "DataClient.h"
 #include "qdebug.h"
+#include <cstdint>
 #include <vector>
 
 DataClient::DataClient(QString file)
@@ -54,7 +55,7 @@ bool DataClient::Connect()
             qDebug() << "Database Opened Successfully";
             query = new QSqlQuery(this->db);
             result = query->exec("CREATE TABLE notes_table (\
-                     id INTEGER NOT NULL,\
+                     id INTEGER PRIMARY KEY AUTOINCREMENT,\
                     title TEXT(25),\
                     notes TEXT(2000),\
                     datetime TEXT(15) NOT NULL);");
@@ -75,8 +76,7 @@ QString DataClient::GetError() const
 }
 
 
-std::vector<Data> DataClient::getData() const
-{
+std::vector<Data> DataClient::getData() const {
     return data;
 }
 
@@ -86,12 +86,26 @@ uint32_t DataClient::notes_count() const
 }
 
 
-void DataClient::updateData(Data d)
+std::int32_t DataClient::updateData(Data &d)
 {
     if(d.id() == -1)
     {
+        qDebug() << "Current time" << d.datetime();
+        QString command = QString("INSERT INTO notes_table(title, notes, datetime) \
+                values ('%1', '%2', '%3')").arg(d.title(), d.notes(), d.datetime());
+        qDebug() << command;
 
+        result = query->exec(command);
+        if(result)
+        {
+            qDebug() << "Data Inserted into database";
+        }
+        else {
+            qDebug() << GetError();
+        }
     }
+
+    return -1;
 }
 
 void DataClient::connectWindow(MainWindow *win)

@@ -28,7 +28,7 @@ public:
     void connectWindow(MainWindow *win);
 
 public slots:
-    void updateData(Data d);
+    std::int32_t updateData(Data &d);
 
 public:
     QSqlDatabase db;

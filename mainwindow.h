@@ -18,18 +18,19 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(Data data = Data(), QWidget *parent = nullptr);
     void setData(Data d);
     ~MainWindow();
+    void updateUI();
 
 public:
-    std::int32_t id;
+    Data d;
 
 public slots:
     void noteChanged();
 
 signals:
-    void noteUpdated(Data d);
+    int32_t noteUpdated(Data &d);
 
 private:
     Ui::MainWindow *ui;

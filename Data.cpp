@@ -14,13 +14,13 @@ Data::Data(std::int32_t id, QString title, QString notes, QString datetime)
 }
 
 
-Data::Data(Data const& data)
-{
-    _id = data._id;
-    _notes = data._notes;
-    _datetime = data._datetime;
-    _title = data._title;
-}
+//Data::Data(Data const& data)
+//{
+    //_id = data._id;
+    //_notes = data._notes;
+    //_datetime = data._datetime;
+    //_title = data._title;
+//}
 
 void Data::set(int32_t id, QString title, QString notes, QString datetime)
 {

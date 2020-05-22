@@ -1,16 +1,29 @@
 #include "mainwindow.h"
+#include <QDateTime>
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(Data data, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->statusbar->showMessage(QDateTime::currentDateTime().toString(Data::format));
-    ui->title->setText("New Note");
-    id = -1;
 
+    d = data;
+
+    //d._id = -1;
+    //d._notes = ui->notes->toPlainText();
+    //d._title = ui->title->text();
+    //d.setDateTime(QDateTime::currentDateTime().toString(Data::format));
+
+    updateUI();
     connect(ui->notes, &QTextEdit::textChanged, this, &MainWindow::noteChanged);
+}
+
+void MainWindow::updateUI()
+{
+    ui->notes->setText(d._notes);
+    ui->title->setText(d._title);
+    ui->statusbar->showMessage(d.datetime());
 }
 
 MainWindow::~MainWindow()
@@ -20,7 +33,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::setData(Data d)
 {
-    this->id = d.id();
     this->ui->title->setText(d.title());
     this->ui->notes->setText(d.notes());
     this->ui->statusbar->showMessage(d.datetime());
@@ -30,6 +42,8 @@ void MainWindow::noteChanged()
 {
     ui->statusbar->showMessage(QDateTime::currentDateTime().toString(Data::format));
 
-    Data d(id, ui->title->text(), ui->notes->toPlainText(), ui->statusbar->currentMessage());
-    emit noteUpdated(d);
+    d.set(d._id, ui->title->text(), ui->notes->toPlainText());
+    d._id = emit noteUpdated(d);
+    qDebug() << "Returned id " << d._id;
 }
+

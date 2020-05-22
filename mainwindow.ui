@@ -16,11 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="title">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
+     <widget class="QLineEdit" name="title"/>
     </item>
     <item>
      <widget class="QTextEdit" name="notes">

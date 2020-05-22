@@ -20,16 +20,17 @@ int main(int argc, char *argv[])
 
     if(d.notes_count() != 0)
     {
-        for(Data d: d.getData())
-        {
-            MainWindow *win = new MainWindow();
-            win->setData(d);
-            windows.push_back(win);
-        }
+      for (Data dat : d.getData()) {
+        MainWindow *win = new MainWindow();
+        win->setData(dat);
+        d.connectWindow(win);
+        windows.push_back(win);
+      }
     }
     else {
         w = new MainWindow();
         w->show();
+        d.connectWindow(w);
         windows.push_back(w);
     }
 

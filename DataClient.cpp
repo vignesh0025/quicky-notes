@@ -88,7 +88,10 @@ uint32_t DataClient::notes_count() const
 
 void DataClient::updateData(Data d)
 {
-    qDebug() << "NOte change received";
+    if(d.id() == -1)
+    {
+
+    }
 }
 
 void DataClient::connectWindow(MainWindow *win)

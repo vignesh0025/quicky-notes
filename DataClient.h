@@ -16,7 +16,7 @@
 
 class DataClient : public QObject
 {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
     DataClient(QString file = "./mydb.db");

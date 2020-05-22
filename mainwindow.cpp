@@ -13,7 +13,6 @@ MainWindow::MainWindow(Data data, QWidget *parent)
     self_gui_update_ongoing = true;
 
     d = data;
-    qDebug() << "Date time " << data.datetime();
 
     timer.setInterval(1000);
     timer.setSingleShot(true);
@@ -34,7 +33,7 @@ MainWindow::MainWindow(Data data, QWidget *parent)
 
 void MainWindow::updateUI()
 {
-    this->ui->id->display(d._id);
+    this->ui->id->display(d.id());
     this->ui->title->setText(d.title());
     this->ui->notes->setText(d.notes());
     this->ui->statusbar->showMessage(d.datetime());
@@ -61,10 +60,12 @@ void MainWindow::timeOut()
 {
     ui->statusbar->showMessage(QDateTime::currentDateTime().toString(Data::format));
 
-    d.set(d._id, ui->title->text(), ui->notes->toPlainText());
-    d._id = emit noteUpdated(d);
-    this->ui->id->display(d._id);
-    qDebug() << "Returned id " << d._id;
+    d.setTitle(ui->title->text());
+    d.setNote(ui->notes->toPlainText());
+    d.setId(emit noteUpdated(d));
+
+    this->ui->id->display(d.id());
+    qDebug() << "Returned id " << d.id();
 }
 
 void MainWindow::deleteBtnClicked()

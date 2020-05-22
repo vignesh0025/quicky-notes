@@ -22,21 +22,6 @@ Data::Data(std::int32_t id, QString title, QString notes, QString datetime)
     //_title = data._title;
 //}
 
-void Data::set(int32_t id, QString title, QString notes, QString datetime)
-{
-    _id = id;
-    _title = title;
-    _notes = notes;
-
-    if(datetime.isEmpty())
-        _datetime = QDateTime::currentDateTime();
-    else
-    {
-        _datetime = QDateTime::fromString(datetime);
-        qDebug() << "Data::set" << _datetime << datetime;
-    }
-}
-
 Data::~Data()
 {
 
@@ -69,12 +54,33 @@ QDateTime Data::orgdatetime() const
     return _datetime;
 }
 
-void Data::setDateTime(QString str)
+void Data::updateDateTime(QString datetime)
 {
-    _datetime = QDateTime::fromString(str);
+    if(datetime.isEmpty())
+        _datetime = QDateTime::currentDateTime();
+    else
+    {
+        _datetime = QDateTime::fromString(datetime);
+        qDebug() << "Data::set" << _datetime << datetime;
+    }
 }
 
-void Data::updateDateTime()
+QString Data::databaseDateTime() const
 {
-    _datetime = QDateTime::currentDateTime();
+    return _datetime.toString();
+}
+
+void Data::setId(std::int32_t id)
+{
+    _id = id;
+}
+
+void Data::setTitle(QString title)
+{
+    _title = title;
+}
+
+void Data::setNote(QString notes)
+{
+    _notes = notes;
 }

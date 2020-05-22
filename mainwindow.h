@@ -11,6 +11,7 @@
 #include <QToolBar>
 
 #include "Data.h"
+#include "quicky_toolbar.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,7 +31,7 @@ public:
     bool self_gui_update_ongoing;
     Data d;
     QTimer timer;
-    QToolBar *toolbar;
+    QuickyToolbar *toolbar;
 
 public slots:
     void noteChanged();

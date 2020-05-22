@@ -38,6 +38,8 @@ bool DataClient::Connect()
                     Data d;
                     qDebug() << query->value(0).toInt() << query->value(1).toString() << query->value(2).toString()<< query->value(3).toString();
                     d.set(query->value(0).toInt(), query->value(1).toString(), query->value(2).toString(), query->value(3).toString());
+
+                    qDebug() << "Date time in Client" << d.datetime();
                     data.push_back(d);
                 }
                 qDebug() << "All Data obtained from table";
@@ -94,7 +96,7 @@ std::int32_t DataClient::updateData(Data &d)
     if(id == -1)
     {
         QString command = QString("INSERT INTO notes_table(title, notes, datetime) \
-                values ('%1', '%2', '%3')").arg(d.title(), d.notes(), d.datetime());
+                values ('%1', '%2', '%3')").arg(d.title(), d.notes(), d.orgdatetime().toString());
         qDebug() << command;
 
         result = query->exec(command);
@@ -111,7 +113,7 @@ std::int32_t DataClient::updateData(Data &d)
     }
     else {
         qDebug() << "Require update statement";
-        QString command = QString("UPDATE notes_table SET title='%1', notes='%2', datetime='%3' WHERE id=%4;").arg(d.title(), d.notes(), d.datetime()).arg(id);
+        QString command = QString("UPDATE notes_table SET title='%1', notes='%2', datetime='%3' WHERE id=%4;").arg(d.title(), d.notes(), d.orgdatetime().toString()).arg(id);
         qDebug() << command;
 
         result = query->exec(command);

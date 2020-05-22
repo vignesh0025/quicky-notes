@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <QString>
 #include <QDateTime>
+#include <QDebug>
 
 #ifndef DATA_H
 #define DATA_H
@@ -21,7 +22,7 @@ public:
     QString title() const;
     QString notes() const;
 
-    QString datetime(QString format = "") const;
+    QString datetime(QString format = Data::format) const;
     QDateTime orgdatetime() const;
     void setDateTime(QString str);
     void updateDateTime();
@@ -31,6 +32,8 @@ public:
     int32_t _id;
     QString _title;
     QString _notes;
+
+private:
     QDateTime _datetime;
 
 };

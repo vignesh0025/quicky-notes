@@ -19,15 +19,18 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     dataclient.cpp \
-    Data.cpp
+    Data.cpp \
+    quicky_toolbar.cpp
 
 HEADERS += \
     mainwindow.h \
     dataclient.h \
-    Data.h
+    Data.h \
+    quicky_toolbar.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    quicky_toolbar.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

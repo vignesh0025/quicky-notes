@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QDateTime>
+#include "qnamespace.h"
 #include "qwindowdefs.h"
 #include "ui_mainwindow.h"
 
@@ -12,19 +13,23 @@ MainWindow::MainWindow(Data data, QWidget *parent)
     self_gui_update_ongoing = true;
 
     d = data;
+    qDebug() << "Date time " << data.datetime();
 
     timer.setInterval(1000);
     timer.setSingleShot(true);
 
+    // Perform UI additions before adding data
+    toolbar = new QuickyToolbar();
+    this->addToolBar(Qt::BottomToolBarArea, toolbar);
+
     updateUI();
+
+    // Connect Events only after updating the UI so no signals are sent
     connect(ui->notes, &QTextEdit::textChanged, this, &MainWindow::noteChanged);
     connect(ui->title, &QLineEdit::textChanged, this, &MainWindow::noteChanged);
     connect(&timer, &QTimer::timeout, this, &MainWindow::timeOut);
 
     //connect(ui->deleteBtn, &QToolButton::clicked
-    toolbar = new QToolBar(this);
-    this->addToolBar(toolbar);
-    toolbar->addWidget(new QToolButton());
 }
 
 void MainWindow::updateUI()

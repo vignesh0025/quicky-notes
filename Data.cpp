@@ -10,7 +10,7 @@ Data::Data(std::int32_t id, QString title, QString notes, QString datetime)
     if(datetime.isEmpty())
         _datetime = QDateTime::currentDateTime();
     else
-        _datetime = QDateTime::fromString(datetime, Data::format);
+        _datetime = QDateTime::fromString(datetime);
 }
 
 
@@ -27,10 +27,14 @@ void Data::set(int32_t id, QString title, QString notes, QString datetime)
     _id = id;
     _title = title;
     _notes = notes;
+
     if(datetime.isEmpty())
         _datetime = QDateTime::currentDateTime();
     else
-        _datetime = QDateTime::fromString(datetime, Data::format);
+    {
+        _datetime = QDateTime::fromString(datetime);
+        qDebug() << "Data::set" << _datetime << datetime;
+    }
 }
 
 Data::~Data()
@@ -56,7 +60,7 @@ QString Data::notes() const
 QString Data::datetime(QString format) const
 {
     if(format.isEmpty())
-        return _datetime.toString(Data::format);
+        return _datetime.toString();
     else return _datetime.toString(format);
 }
 
@@ -67,7 +71,7 @@ QDateTime Data::orgdatetime() const
 
 void Data::setDateTime(QString str)
 {
-    _datetime = QDateTime::fromString(str, Data::format);
+    _datetime = QDateTime::fromString(str);
 }
 
 void Data::updateDateTime()

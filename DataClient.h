@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <QSqlDriver>
 #include <vector>
+#include <QTimer>
 
 #include "Data.h"
 #include "mainwindow.h"
@@ -36,7 +37,6 @@ public:
     QString databaseFile;
     bool result;
     std::vector<Data> data;
-
 };
 
 #endif /* DATACLIENT_H */

@@ -36,8 +36,9 @@ bool DataClient::Connect()
                 while(query->next())
                 {
                     Data d;
-                    //d.set(query->value(0).toInt(), query->value(1).toString(), query->value(2).toString(), query->value(3).toString());
-                    /*data.push_back(d);*/
+                    qDebug() << query->value(0).toInt() << query->value(1).toString() << query->value(2).toString()<< query->value(3).toString();
+                    d.set(query->value(0).toInt(), query->value(1).toString(), query->value(2).toString(), query->value(3).toString());
+                    data.push_back(d);
                 }
                 qDebug() << "All Data obtained from table";
             }
@@ -88,9 +89,10 @@ uint32_t DataClient::notes_count() const
 
 std::int32_t DataClient::updateData(Data &d)
 {
-    if(d.id() == -1)
+    std::int32_t id = d.id();
+
+    if(id == -1)
     {
-        qDebug() << "Current time" << d.datetime();
         QString command = QString("INSERT INTO notes_table(title, notes, datetime) \
                 values ('%1', '%2', '%3')").arg(d.title(), d.notes(), d.datetime());
         qDebug() << command;
@@ -98,14 +100,28 @@ std::int32_t DataClient::updateData(Data &d)
         result = query->exec(command);
         if(result)
         {
-            qDebug() << "Data Inserted into database";
+            qDebug() << "Data Inserted into database with id " << query->lastInsertId().toInt();
+
+            id = query->lastInsertId().toInt();
         }
         else {
             qDebug() << GetError();
         }
-    }
 
-    return -1;
+    }
+    else {
+        qDebug() << "Require update statement";
+        QString command = QString("UPDATE notes_table SET title='%1', notes='%2', datetime='%3' WHERE id=%4;").arg(d.title(), d.notes(), d.datetime()).arg(id);
+        qDebug() << command;
+
+        result = query->exec(command);
+        if(result)
+            qDebug() << "Data updated into database with id " << id;
+        else {
+            qDebug() << GetError();
+        }
+    }
+    return id;
 }
 
 void DataClient::connectWindow(MainWindow *win)

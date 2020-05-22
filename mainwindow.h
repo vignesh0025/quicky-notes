@@ -6,6 +6,9 @@
 #include <QTextEdit>
 #include <cstdint>
 #include <QDebug>
+#include <QTimer>
+#include <QToolButton>
+#include <QToolBar>
 
 #include "Data.h"
 
@@ -24,10 +27,15 @@ public:
     void updateUI();
 
 public:
+    bool self_gui_update_ongoing;
     Data d;
+    QTimer timer;
+    QToolBar *toolbar;
 
 public slots:
     void noteChanged();
+    void deleteBtnClicked();
+    void timeOut();
 
 signals:
     int32_t noteUpdated(Data &d);

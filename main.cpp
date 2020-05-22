@@ -21,8 +21,9 @@ int main(int argc, char *argv[])
     if(d.notes_count() != 0)
     {
       for (Data dat : d.getData()) {
-        MainWindow *win = new MainWindow();
-        win->setData(dat);
+        MainWindow *win = new MainWindow(dat);
+        //win->setData(dat);
+        win->show();
         d.connectWindow(win);
         windows.push_back(win);
       }

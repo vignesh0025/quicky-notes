@@ -12,6 +12,8 @@
 #include <QAction>
 #include <QResizeEvent>
 #include <QMoveEvent>
+#include <QTextCursor>
+#include <QFont>
 
 #include "Data.h"
 #include "quicky_toolbar.h"
@@ -30,6 +32,9 @@ public:
     ~MainWindow();
     void updateUI();
     void updateBgColor();
+    void boldText(bool status);
+    void italicText(bool status);
+    void underlineText(bool status);
 
     bool self_gui_update_ongoing;
     Data d;

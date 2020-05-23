@@ -11,6 +11,9 @@ QuickyToolbar::QuickyToolbar(QWidget *parent) :
     connect(ui->newNoteBtn, &QAction::triggered, this, &QuickyToolbar::newMenuAction);
     connect(ui->deleteNoteBtn, &QAction::triggered, this, &QuickyToolbar::deleteMenuAction);
     connect(ui->bgColorBtn, &QAction::triggered, this, &QuickyToolbar::bgColorMenuAction);
+    connect(ui->actionBoldBtn, &QAction::triggered, this, &QuickyToolbar::boldMenuAction);
+    connect(ui->actionItalicBtn, &QAction::triggered, this, &QuickyToolbar::italicMenuAction);
+    connect(ui->actionUnderlineBtn, &QAction::triggered, this, &QuickyToolbar::underlineMenuAction);
 }
 
 QuickyToolbar::~QuickyToolbar()
@@ -31,4 +34,19 @@ void QuickyToolbar::deleteMenuAction(bool status)
 void QuickyToolbar::bgColorMenuAction(bool status)
 {
     emit menuActionTriggered(status,parent, MenuItem::BgColorNote);
+}
+
+void QuickyToolbar::boldMenuAction(bool status)
+{
+    emit menuActionTriggered(status,parent, MenuItem::BoldNote);
+}
+
+void QuickyToolbar::italicMenuAction(bool status)
+{
+    emit menuActionTriggered(status,parent, MenuItem::ItalicNote);
+}
+
+void QuickyToolbar::underlineMenuAction(bool status)
+{
+    emit menuActionTriggered(status,parent, MenuItem::UnderlineNote);
 }

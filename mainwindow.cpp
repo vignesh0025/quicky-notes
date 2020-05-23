@@ -3,6 +3,8 @@
 #include <QBuffer>
 #include <QColorDialog>
 #include "qnamespace.h"
+#include "qtextcursor.h"
+#include "qtextformat.h"
 #include "qwindowdefs.h"
 #include "ui_mainwindow.h"
 
@@ -36,7 +38,7 @@ void MainWindow::updateUI()
 {
     this->ui->id->display(d.id());
     this->ui->title->setText(d.title());
-    this->ui->notes->setText(d.notes());
+    this->ui->notes->setHtml(d.notes());
     this->ui->statusbar->showMessage(d.datetime());
     this->ui->notes->setStyleSheet(d.stylesheet());
     this->ui->title->setStyleSheet(d.stylesheet());
@@ -68,7 +70,7 @@ void MainWindow::timeOut()
     ui->statusbar->showMessage(QDateTime::currentDateTime().toString(Data::format));
 
     d.setTitle(ui->title->text());
-    d.setNote(ui->notes->toPlainText());
+    d.setNote(ui->notes->toHtml());
     d.setGeomentry(this->pos(), this->size());
     d.setStyleSheet(ui->title->styleSheet());
     d.setId(emit noteUpdated(d));
@@ -116,4 +118,38 @@ void MainWindow::updateBgColor()
     else {
         qDebug() << "Invalid Note";
     }
+}
+
+
+void MainWindow::boldText(bool status)
+{
+    QTextCursor cursor = this->ui->notes->textCursor();
+    QTextCharFormat fmt = cursor.blockCharFormat();
+    fmt.setFontWeight(status? QFont::Bold: QFont::Normal);
+    cursor.mergeCharFormat(fmt);
+
+    if(status) this->ui->notes->setFontWeight(QFont::Bold);
+        else this->ui->notes->setFontWeight(QFont::Normal);
+}
+
+void MainWindow::italicText(bool status)
+{
+    QTextCursor cursor = this->ui->notes->textCursor();
+    QTextCharFormat fmt = cursor.blockCharFormat();
+    fmt.setFontItalic(status);
+    cursor.mergeCharFormat(fmt);
+
+    this->ui->notes->setFontItalic(status);
+}
+
+void MainWindow::underlineText(bool status)
+{
+
+    QTextCursor cursor = this->ui->notes->textCursor();
+    QTextCharFormat fmt = cursor.blockCharFormat();
+    fmt.setFontUnderline(status);
+    cursor.mergeCharFormat(fmt);
+
+    this->ui->notes->setFontUnderline(status);
+
 }

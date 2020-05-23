@@ -71,6 +71,8 @@ void NoteWindows::exec()
 
 void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
 {
+
+    win = (MainWindow *)parent;
     switch(item)
     {
         case MenuItem::NewNote:
@@ -78,7 +80,6 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
             break;
 
         case MenuItem::DeleteNote:
-            win = (MainWindow *)parent;
             if(deleteNote(win->d.id()))
             {
                 win->close();
@@ -88,8 +89,19 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
             break;
 
         case MenuItem::BgColorNote:
-            win = (MainWindow *)parent;
             win->updateBgColor();
+            break;
+
+        case MenuItem::BoldNote:
+            win->boldText(status);
+            break;
+
+        case MenuItem::ItalicNote:
+            win->italicText(status);
+            break;
+
+        case MenuItem::UnderlineNote:
+            win->underlineText(status);
             break;
     }
 }

@@ -24,6 +24,9 @@ private slots:
     void newMenuAction(bool status);
     void deleteMenuAction(bool status);
     void bgColorMenuAction(bool status);
+    void boldMenuAction(bool status);
+    void italicMenuAction(bool status);
+    void underlineMenuAction(bool status);
 
 signals:
     void menuActionTriggered(bool status, QWidget *parent, MenuItem item);

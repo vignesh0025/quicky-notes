@@ -1,8 +1,39 @@
 #include "NoteWindows.h"
+#include "qnamespace.h"
+#include <cstdlib>
 
 NoteWindows::NoteWindows()
 {
 
+    qDebug() << QSystemTrayIcon::isSystemTrayAvailable();
+    trayIcon = new QSystemTrayIcon(QIcon("./tray_icon.png"), this);
+
+    newNoteAction = new QAction(tr("&New Note"), this);
+    showAction = new QAction(tr("&Show All"), this);
+    quitAction = new QAction(tr("&Quit"), this);
+    minimiseAction = new QAction(tr("&Minimise all"), this);
+
+    trayIconMenu = new QMenu();
+    trayIconMenu->addAction(newNoteAction);
+    trayIconMenu->addAction(showAction);
+    trayIconMenu->addAction(minimiseAction);
+    trayIconMenu->addAction(quitAction);
+
+    trayIconMenu->addSeparator();
+    trayIcon->setContextMenu(trayIconMenu);
+
+    connect(trayIcon, &QSystemTrayIcon::activated, this, [this](QSystemTrayIcon::ActivationReason reason) {
+            if(reason == QSystemTrayIcon::Trigger)
+            {
+            this->ShowFocus();
+            }
+    });
+    connect(quitAction, &QAction::triggered, this, &NoteWindows::quitTrayAction);
+    connect(showAction, &QAction::triggered, this, &NoteWindows::showTrayAction);
+    connect(minimiseAction, &QAction::triggered, this, &NoteWindows::minimiseTrayAction);
+    connect(newNoteAction, &QAction::triggered, this, [this](bool status) {this->NewNote();});
+
+    /*//connect(trayIcon, &QSystemTrayIcon::activated, this, &NoteWindows::iconActivated);*/
 }
 
 NoteWindows::~NoteWindows()
@@ -30,10 +61,13 @@ void NoteWindows::exec()
 
     for(auto win: windows)
     {
+        //connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateData);
         connect(win, &MainWindow::noteUpdated, &d, &DataClient::updateData);
         connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
         win->show();
     }
+
+    trayIcon->show();
 }
 
 void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
@@ -41,11 +75,7 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
     switch(item)
     {
         case MenuItem::NewNote:
-            win = new MainWindow();
-            win->show();
-            connect(win, &MainWindow::noteUpdated, &d, &DataClient::updateData);
-            connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
-            windows.insert(win);
+            NewNote();
             break;
 
         case MenuItem::DeleteNote:
@@ -57,4 +87,63 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
             }
             break;
     }
+}
+
+void NoteWindows::iconActivated()
+{
+    qDebug() << "Tray Icon Activated";
+}
+
+void NoteWindows::quitTrayAction(bool status)
+{
+    exit(0);
+}
+
+void NoteWindows::showTrayAction(bool status)
+{
+    for(auto win: windows)
+    {
+        if(!win->isVisible())
+            win->show();
+        else if(!win->hasFocus())
+        {
+            win->raise();
+            win->setFocusPolicy(Qt::TabFocus);
+            win->setFocus();
+            win->activateWindow();
+
+        }
+    }
+}
+
+void NoteWindows::minimiseTrayAction(bool status)
+{
+    for(auto win: windows)
+        win->close();
+}
+
+void NoteWindows::NewNote()
+{
+    win = new MainWindow();
+    win->show();
+    connect(win, &MainWindow::noteUpdated, &d, &DataClient::updateData);
+    connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
+    windows.insert(win);
+
+}
+
+void NoteWindows::ShowFocus()
+{
+    qDebug() << "Activated: ";
+    for(auto win: windows)
+    {
+        win->raise();
+        win->setFocusPolicy(Qt::TabFocus);
+        win->setFocus();
+        win->activateWindow();
+    }
+}
+
+std::int32_t NoteWindows::updateData(Data &d)
+{
 }

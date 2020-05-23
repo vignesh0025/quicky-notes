@@ -5,7 +5,7 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(Data data, QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent, Qt::Tool)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);

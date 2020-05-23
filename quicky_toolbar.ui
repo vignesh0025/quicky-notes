@@ -35,7 +35,7 @@
     <string>Delete Note</string>
    </property>
    <property name="shortcut">
-    <string>Del</string>
+    <string>Ctrl+D</string>
    </property>
   </action>
   <addaction name="newNoteBtn"/>

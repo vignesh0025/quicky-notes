@@ -46,7 +46,11 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 
+<<<<<<< HEAD
 # QtCreator 4.8< compilation database
+=======
+# QtCreator 4.8< compilation database
+>>>>>>> 74420fdc79fc4ab65635bec6d2402dbada963b92
 compile_commands.json
 
 # QtCreator local machine specific files for imported projects

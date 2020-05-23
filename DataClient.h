@@ -28,8 +28,6 @@ public:
     uint32_t notes_count() const;
     void connectWindow(MainWindow *win);
     bool deleteNote(std::int32_t id);
-
-public slots:
     std::int32_t updateData(Data &d);
 
 public:

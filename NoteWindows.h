@@ -6,6 +6,7 @@
 #include <memory>
 #include <set>
 #include <memory.h>
+#include <QThread>
 #include <QPixmap>
 
 #include "mainwindow.h"
@@ -41,6 +42,9 @@ public:
     QAction *showAction;
     QAction *quitAction;
     QAction *minimiseAction;
+    QThread thread;
+
+
 
 public slots:
     void menuAction(bool status, QWidget *parent, MenuItem item);
@@ -49,7 +53,8 @@ public slots:
     void showTrayAction(bool status);
     void minimiseTrayAction(bool status);
 
-    std::int32_t updateData(Data &d);
+    std::int32_t updateNote(Data &d);
+    bool deleteNote(std::int32_t id);
 };
 
 #endif /* NOTEWINDOWS_H */

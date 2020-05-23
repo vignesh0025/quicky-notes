@@ -61,8 +61,7 @@ void NoteWindows::exec()
 
     for(auto win: windows)
     {
-        //connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateData);
-        connect(win, &MainWindow::noteUpdated, &d, &DataClient::updateData);
+        connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
         connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
         win->show();
     }
@@ -80,10 +79,11 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
 
         case MenuItem::DeleteNote:
             win = (MainWindow *)parent;
-            if(d.deleteNote(win->d.id()))
+            if(deleteNote(win->d.id()))
             {
                 win->close();
                 windows.erase(win);
+                delete win;
             }
             break;
     }
@@ -104,7 +104,13 @@ void NoteWindows::showTrayAction(bool status)
     for(auto win: windows)
     {
         if(!win->isVisible())
+        {
             win->show();
+            win->raise();
+            win->setFocusPolicy(Qt::TabFocus);
+            win->setFocus();
+            win->activateWindow();
+        }
         else if(!win->hasFocus())
         {
             win->raise();
@@ -126,10 +132,14 @@ void NoteWindows::NewNote()
 {
     win = new MainWindow();
     win->show();
-    connect(win, &MainWindow::noteUpdated, &d, &DataClient::updateData);
+    connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
     connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
     windows.insert(win);
 
+}
+
+bool NoteWindows::deleteNote(std::int32_t id){
+    return d.deleteNote(id);
 }
 
 void NoteWindows::ShowFocus()
@@ -144,6 +154,7 @@ void NoteWindows::ShowFocus()
     }
 }
 
-std::int32_t NoteWindows::updateData(Data &d)
+std::int32_t NoteWindows::updateNote(Data &data)
 {
+    return d.updateData(data);
 }

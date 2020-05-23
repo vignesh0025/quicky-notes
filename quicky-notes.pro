@@ -20,13 +20,15 @@ SOURCES += \
     mainwindow.cpp \
     dataclient.cpp \
     Data.cpp \
-    quicky_toolbar.cpp
+    quicky_toolbar.cpp \
+    NoteWindows.cpp
 
 HEADERS += \
     mainwindow.h \
     dataclient.h \
     Data.h \
-    quicky_toolbar.h
+    quicky_toolbar.h \
+    NoteWindows.h
 
 FORMS += \
     mainwindow.ui \

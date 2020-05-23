@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QToolBar>
+#include <QAction>
 
 #include "Data.h"
 #include "quicky_toolbar.h"
@@ -27,15 +28,15 @@ public:
     ~MainWindow();
     void updateUI();
 
-public:
     bool self_gui_update_ongoing;
     Data d;
     QTimer timer;
+
+public:
     QuickyToolbar *toolbar;
 
 public slots:
     void noteChanged();
-    void deleteBtnClicked();
     void timeOut();
 
 signals:

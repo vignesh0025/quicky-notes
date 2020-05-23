@@ -110,7 +110,6 @@ std::int32_t DataClient::updateData(Data &d)
 
     }
     else {
-        qDebug() << "Require update statement";
         QString command = QString("UPDATE notes_table SET title='%1', notes='%2', datetime='%3' \
                 WHERE id=%4;").arg(d.title(), d.notes(),  d.databaseDateTime()).arg(id);
         qDebug() << command;
@@ -128,4 +127,19 @@ std::int32_t DataClient::updateData(Data &d)
 void DataClient::connectWindow(MainWindow *win)
 {
     connect(win, &MainWindow::noteUpdated, this, &DataClient::updateData );
+}
+
+bool DataClient::deleteNote(std::int32_t id){
+
+    QString command = QString("DELETE FROM notes_table WHERE id='%1';").arg(id);
+    qDebug() << command;
+
+    result = query->exec(command);
+    if(result)
+        qDebug() << "Data deleted from database with id " << id;
+    else {
+        qDebug() << GetError();
+    }
+
+    return result;
 }

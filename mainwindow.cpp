@@ -18,7 +18,7 @@ MainWindow::MainWindow(Data data, QWidget *parent)
     timer.setSingleShot(true);
 
     // Perform UI additions before adding data
-    toolbar = new QuickyToolbar();
+    toolbar = new QuickyToolbar(this);
     this->addToolBar(Qt::BottomToolBarArea, toolbar);
 
     updateUI();
@@ -28,7 +28,6 @@ MainWindow::MainWindow(Data data, QWidget *parent)
     connect(ui->title, &QLineEdit::textChanged, this, &MainWindow::noteChanged);
     connect(&timer, &QTimer::timeout, this, &MainWindow::timeOut);
 
-    //connect(ui->deleteBtn, &QToolButton::clicked
 }
 
 void MainWindow::updateUI()
@@ -66,9 +65,4 @@ void MainWindow::timeOut()
 
     this->ui->id->display(d.id());
     qDebug() << "Returned id " << d.id();
-}
-
-void MainWindow::deleteBtnClicked()
-{
-
 }

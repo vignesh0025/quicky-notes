@@ -1,3 +1,4 @@
+#include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QFile>
@@ -7,6 +8,7 @@
 #include <QSqlDriver>
 #include <vector>
 #include <QTimer>
+#include <QThread>
 
 #include "Data.h"
 #include "mainwindow.h"
@@ -17,8 +19,8 @@
 
 class DataClient : public QObject
 {
-    //Q_OBJECT
 
+    Q_OBJECT
 public:
     DataClient(QString file = "./mydb.db");
     ~DataClient();
@@ -36,6 +38,12 @@ public:
     QString databaseFile;
     bool result;
     std::vector<Data> data;
+
+public slots:
+    void doWork();
+
+signals:
+    void finished();
 };
 
 #endif /* DATACLIENT_H */

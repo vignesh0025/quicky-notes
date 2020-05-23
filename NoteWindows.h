@@ -22,6 +22,8 @@
 class NoteWindows : public QObject
 {
 
+    void getIntoFocus(MainWindow *win);
+
 public:
     NoteWindows();
     virtual ~NoteWindows();
@@ -29,6 +31,7 @@ public:
     void exec();
     void NewNote();
     void ShowFocus();
+
 
 public:
     DataClient d;
@@ -45,7 +48,6 @@ public:
     QThread thread;
 
 
-
 public slots:
     void menuAction(bool status, QWidget *parent, MenuItem item);
     void iconActivated();
@@ -55,6 +57,8 @@ public slots:
 
     std::int32_t updateNote(Data &d);
     bool deleteNote(std::int32_t id);
+
+    void finished();
 };
 
 #endif /* NOTEWINDOWS_H */

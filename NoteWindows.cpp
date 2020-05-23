@@ -4,7 +4,6 @@
 
 NoteWindows::NoteWindows()
 {
-
     qDebug() << QSystemTrayIcon::isSystemTrayAvailable();
     trayIcon = new QSystemTrayIcon(QIcon("./tray_icon.png"), this);
 
@@ -46,6 +45,7 @@ void NoteWindows::exec()
 {
     d.Connect();
 
+
     if(d.notes_count() != 0)
     {
         for (Data dat : d.getData()) {
@@ -63,7 +63,7 @@ void NoteWindows::exec()
     {
         connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
         connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
-        win->show();
+        getIntoFocus(win);
     }
 
     trayIcon->show();
@@ -101,25 +101,7 @@ void NoteWindows::quitTrayAction(bool status)
 
 void NoteWindows::showTrayAction(bool status)
 {
-    for(auto win: windows)
-    {
-        if(!win->isVisible())
-        {
-            win->show();
-            win->raise();
-            win->setFocusPolicy(Qt::TabFocus);
-            win->setFocus();
-            win->activateWindow();
-        }
-        else if(!win->hasFocus())
-        {
-            win->raise();
-            win->setFocusPolicy(Qt::TabFocus);
-            win->setFocus();
-            win->activateWindow();
-
-        }
-    }
+    ShowFocus();
 }
 
 void NoteWindows::minimiseTrayAction(bool status)
@@ -131,7 +113,7 @@ void NoteWindows::minimiseTrayAction(bool status)
 void NoteWindows::NewNote()
 {
     win = new MainWindow();
-    win->show();
+    getIntoFocus(win);
     connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
     connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
     windows.insert(win);
@@ -146,15 +128,34 @@ void NoteWindows::ShowFocus()
 {
     qDebug() << "Activated: ";
     for(auto win: windows)
+        getIntoFocus(win);
+}
+
+std::int32_t NoteWindows::updateNote(Data &data)
+{
+    return d.updateData(data);
+}
+
+void NoteWindows::finished()
+{
+    qDebug() << "Finished";
+}
+
+void NoteWindows::getIntoFocus(MainWindow *win)
+{
+    if(!win->isVisible())
+    {
+        win->show();
+        win->raise();
+        win->setFocusPolicy(Qt::TabFocus);
+        win->setFocus();
+        win->activateWindow();
+    }
+    else if(!win->hasFocus())
     {
         win->raise();
         win->setFocusPolicy(Qt::TabFocus);
         win->setFocus();
         win->activateWindow();
     }
-}
-
-std::int32_t NoteWindows::updateNote(Data &data)
-{
-    return d.updateData(data);
 }

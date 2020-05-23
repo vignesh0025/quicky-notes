@@ -10,6 +10,8 @@
 #include <QToolButton>
 #include <QToolBar>
 #include <QAction>
+#include <QResizeEvent>
+#include <QMoveEvent>
 
 #include "Data.h"
 #include "quicky_toolbar.h"
@@ -31,6 +33,11 @@ public:
     bool self_gui_update_ongoing;
     Data d;
     QTimer timer;
+
+
+protected:
+    void resizeEvent(QResizeEvent *ev) override;
+    void moveEvent(QMoveEvent *ev) override;
 
 public:
     QuickyToolbar *toolbar;

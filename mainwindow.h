@@ -29,6 +29,7 @@ public:
     void setData(Data d);
     ~MainWindow();
     void updateUI();
+    void updateBgColor();
 
     bool self_gui_update_ongoing;
     Data d;

@@ -23,6 +23,7 @@ public:
 private slots:
     void newMenuAction(bool status);
     void deleteMenuAction(bool status);
+    void bgColorMenuAction(bool status);
 
 signals:
     void menuActionTriggered(bool status, QWidget *parent, MenuItem item);

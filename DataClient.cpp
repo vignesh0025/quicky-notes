@@ -26,7 +26,7 @@ bool DataClient::Connect()
         {
             qDebug() << "Database Opened Successfully";
             query = new QSqlQuery(this->db);
-            result = query->exec("SELECT * from notes_table;");
+            result = query->exec("SELECT id,title,notes,datetime,stylesheet,geometry from notes_table;");
 
             if(result)
             {
@@ -40,9 +40,11 @@ bool DataClient::Connect()
                         << query->value(1).toString()
                         << query->value(2).toString()
                         << query->value(3).toString()
-                        << query->value(4).toByteArray();
+                        << query->value(4).toByteArray()
+                        << query->value(5).toByteArray();
 
-                    d.dataUpdateFromByteArray(query->value(4).toByteArray());
+                    d.setStyleSheet(query->value(4).toString());
+                    d.dataUpdateFromByteArray(query->value(5).toByteArray());
 
                     data.push_back(d);
                 }
@@ -65,7 +67,8 @@ bool DataClient::Connect()
                      id INTEGER PRIMARY KEY AUTOINCREMENT,\
                     title TEXT(25),\
                     notes TEXT(2000),\
-                    datetime TEXT(15) NOT NULL,\
+                    datetime TEXT(15),\
+                    stylesheet TEXT(25),\
                     geometry BLOB);");
 
             if(result) qDebug() << "Table Created";
@@ -101,11 +104,13 @@ std::int32_t DataClient::updateData(Data &d)
 
     if(id == -1)
     {
-        query->prepare("INSERT INTO notes_table(title, notes, datetime, geometry) values (:title, :notes, :datetime, :geometry);");
+        query->prepare("INSERT INTO notes_table(title, notes, datetime, geometry, stylesheet) \
+                values (:title, :notes, :datetime, :geometry, :stylesheet);");
         query->bindValue(":title", d.title());
         query->bindValue(":notes", d.notes());
         query->bindValue(":datetime", d.databaseDateTime());
         query->bindValue(":geometry", d.byteaarray());
+        query->bindValue(":stylesheet", d.stylesheet());
 
         result = query->exec();
 
@@ -124,11 +129,13 @@ std::int32_t DataClient::updateData(Data &d)
     }
     else {
 
-        query->prepare("UPDATE notes_table SET title=:title, notes=:notes, datetime=:datetime, geometry=:geometry WHERE id=:id ;");
+        query->prepare("UPDATE notes_table SET title=:title, notes=:notes, datetime=:datetime, \
+                geometry=:geometry, stylesheet=:stylesheet WHERE id=:id ;");
         query->bindValue(":title", d.title());
         query->bindValue(":notes", d.notes());
         query->bindValue(":datetime", d.databaseDateTime());
         query->bindValue(":geometry", d.byteaarray());
+        query->bindValue(":stylesheet", d.stylesheet());
         query->bindValue(":id", d.id());
 
         result = query->exec();

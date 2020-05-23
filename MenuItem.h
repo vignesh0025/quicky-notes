@@ -5,7 +5,8 @@
 enum class MenuItem
 {
     NewNote,
-    DeleteNote
+    DeleteNote,
+    BgColorNote
 };
 
 #endif /* MENUITEM_H */

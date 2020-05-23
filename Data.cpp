@@ -12,6 +12,7 @@ Data::Data(std::int32_t id, QString title, QString notes, QString datetime,QPoin
     else
         _datetime = QDateTime::fromString(datetime);
     setGeomentry(pos, size);
+    setStyleSheet("background-color: white");
 }
 
 
@@ -129,3 +130,12 @@ void Data::dataUpdateFromByteArray(QByteArray byte)
     qDebug() << "Obtained from byte " << _pos << _size;
 }
 
+void Data::setStyleSheet(QString stylesheet)
+{
+    _stylesheet = stylesheet;
+}
+
+QString Data::stylesheet() const
+{
+    return _stylesheet;
+}

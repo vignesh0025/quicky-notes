@@ -30,6 +30,7 @@ public:
     QString notes() const;
     QPoint pos() const;
     QSize size() const;
+    QString stylesheet() const;
     QString datetime(QString format = Data::format) const;
     QByteArray byteaarray() const;
 
@@ -42,6 +43,7 @@ public:
     void setNote(QString str = "");
     void setGeomentry(QPoint pos, QSize size);
     void dataUpdateFromByteArray(QByteArray byte);
+    void setStyleSheet(QString stylesheet);
 
     virtual ~Data();
 
@@ -53,6 +55,7 @@ private:
     QByteArray _bytearray;
     QPoint _pos;
     QSize _size;
+    QString _stylesheet;
 };
 
 #endif /* DATA_H */

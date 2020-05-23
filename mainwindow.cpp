@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QDateTime>
 #include <QBuffer>
+#include <QColorDialog>
 #include "qnamespace.h"
 #include "qwindowdefs.h"
 #include "ui_mainwindow.h"
@@ -27,6 +28,7 @@ MainWindow::MainWindow(Data data, QWidget *parent)
     // Connect Events only after updating the UI so no signals are sent
     connect(ui->notes, &QTextEdit::textChanged, this, &MainWindow::noteChanged);
     connect(ui->title, &QLineEdit::textChanged, this, &MainWindow::noteChanged);
+
     connect(&timer, &QTimer::timeout, this, &MainWindow::timeOut);
 }
 
@@ -36,6 +38,8 @@ void MainWindow::updateUI()
     this->ui->title->setText(d.title());
     this->ui->notes->setText(d.notes());
     this->ui->statusbar->showMessage(d.datetime());
+    this->ui->notes->setStyleSheet(d.stylesheet());
+    this->ui->title->setStyleSheet(d.stylesheet());
     qDebug() << d.pos() << d.size();
     this->move(d.pos());
     this->resize(d.size());
@@ -66,7 +70,7 @@ void MainWindow::timeOut()
     d.setTitle(ui->title->text());
     d.setNote(ui->notes->toPlainText());
     d.setGeomentry(this->pos(), this->size());
-
+    d.setStyleSheet(ui->title->styleSheet());
     d.setId(emit noteUpdated(d));
 
     this->ui->id->display(d.id());
@@ -96,4 +100,20 @@ void MainWindow::moveEvent(QMoveEvent *ev)
         qDebug() << "Invalid Note";
     }
 
+}
+
+void MainWindow::updateBgColor()
+{
+    QColor color = QColorDialog::getColor(Qt::white, this);
+    this->ui->notes->setStyleSheet("background-color: " + color.name());
+    this->ui->title->setStyleSheet("background-color: " + color.name());
+
+    if(d.id() != INVALID_NOTE)
+    {
+        timer.start();
+        qDebug() << "Moved";
+    }
+    else {
+        qDebug() << "Invalid Note";
+    }
 }

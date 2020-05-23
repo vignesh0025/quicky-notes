@@ -86,6 +86,11 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
                 delete win;
             }
             break;
+
+        case MenuItem::BgColorNote:
+            win = (MainWindow *)parent;
+            win->updateBgColor();
+            break;
     }
 }
 

@@ -38,9 +38,24 @@
     <string>Ctrl+D</string>
    </property>
   </action>
+  <action name="bgColorBtn">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/color_icon.png</normaloff>:/icons/color_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>C</string>
+   </property>
+   <property name="toolTip">
+    <string>Background Color</string>
+   </property>
+  </action>
   <addaction name="newNoteBtn"/>
   <addaction name="deleteNoteBtn"/>
+  <addaction name="bgColorBtn"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

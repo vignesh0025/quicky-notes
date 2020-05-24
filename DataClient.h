@@ -14,6 +14,8 @@
 #include "mainwindow.h"
 #include "qobjectdefs.h"
 
+#define FILENAME "./mydb.db"
+
 #ifndef DATACLIENT_H
 #define DATACLIENT_H
 
@@ -22,7 +24,7 @@ class DataClient : public QObject
 
     Q_OBJECT
 public:
-    DataClient(QString file = "./mydb.db");
+    DataClient(QString file = FILENAME);
     ~DataClient();
     bool Connect();
     QString GetError() const;

@@ -1,6 +1,6 @@
-QT       += core gui sql
+QT       += core gui sql widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
@@ -18,19 +18,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    dataclient.cpp \
+    DataClient.cpp \
     Data.cpp \
     quicky_toolbar.cpp \
     NoteWindows.cpp \
     NoteData.cpp \
+    RunGuard.cpp
 
 HEADERS += \
     mainwindow.h \
-    dataclient.h \
+    DataClient.h \
     Data.h \
     quicky_toolbar.h \
     NoteWindows.h \
     NoteData.h \
+    RunGuard.h
 
 FORMS += \
     mainwindow.ui \

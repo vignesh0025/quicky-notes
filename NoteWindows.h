@@ -15,9 +15,12 @@
 #include "Data.h"
 #include "quicky_toolbar.h"
 #include "MenuItem.h"
+#include "NoteData.h"
 
 #ifndef NOTEWINDOWS_H
 #define NOTEWINDOWS_H
+
+
 
 class NoteWindows : public QObject
 {
@@ -35,10 +38,14 @@ public:
 
 public:
     DataClient d;
-    std::set<MainWindow *> windows;
-    MainWindow *win;
+    std::set<NoteData *> windows;
+    std::set<QAction *> actions;
+
+    NoteData *win;
+    QAction *act;
 
     QMenu *trayIconMenu;
+    QMenu *trayNotesMenu;
     QSystemTrayIcon *trayIcon;
 
     QAction *newNoteAction;
@@ -50,11 +57,11 @@ public:
 
 public slots:
     void menuAction(bool status, QWidget *parent, MenuItem item);
-    void iconActivated();
+    void iconActivated(std::int32_t id);
     void quitTrayAction(bool status);
     void showTrayAction(bool status);
     void minimiseTrayAction(bool status);
-
+    void trayNoteTriggered();
     std::int32_t updateNote(Data &d);
     bool deleteNote(std::int32_t id);
 

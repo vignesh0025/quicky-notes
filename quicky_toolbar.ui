@@ -83,12 +83,38 @@
     <string>Ctrl+U</string>
    </property>
   </action>
+  <action name="textColorBtn">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/text_color_icon.png</normaloff>:/icons/text_color_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Text Color</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="strikeoutNoteBtn">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/strike_out.png</normaloff>:/icons/strike_out.png</iconset>
+   </property>
+   <property name="text">
+    <string>S</string>
+   </property>
+  </action>
   <addaction name="newNoteBtn"/>
   <addaction name="deleteNoteBtn"/>
   <addaction name="bgColorBtn"/>
+  <addaction name="textColorBtn"/>
   <addaction name="actionBoldBtn"/>
   <addaction name="actionItalicBtn"/>
   <addaction name="actionUnderlineBtn"/>
+  <addaction name="strikeoutNoteBtn"/>
  </widget>
  <resources>
   <include location="resources.qrc"/>

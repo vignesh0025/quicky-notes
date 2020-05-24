@@ -1,25 +1,31 @@
 #include "NoteWindows.h"
+#include "qmenu.h"
 #include "qnamespace.h"
 #include <cstdlib>
 
 NoteWindows::NoteWindows()
 {
     qDebug() << QSystemTrayIcon::isSystemTrayAvailable();
-    trayIcon = new QSystemTrayIcon(QIcon("./tray_icon.png"), this);
+    trayIcon = new QSystemTrayIcon(QIcon(":/icons/tray_icon.png"), this);
 
     newNoteAction = new QAction(tr("&New Note"), this);
     showAction = new QAction(tr("&Show All"), this);
     quitAction = new QAction(tr("&Quit"), this);
     minimiseAction = new QAction(tr("&Minimise all"), this);
 
+    trayNotesMenu = new QMenu(QString("Total %1").arg(d.notes_count()));
+
     trayIconMenu = new QMenu();
     trayIconMenu->addAction(newNoteAction);
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(minimiseAction);
     trayIconMenu->addAction(quitAction);
+    trayIconMenu->addMenu(trayNotesMenu);
+
 
     trayIconMenu->addSeparator();
     trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setToolTip(QString("Total %1").arg(d.notes_count()));
 
     connect(trayIcon, &QSystemTrayIcon::activated, this, [this](QSystemTrayIcon::ActivationReason reason) {
             if(reason == QSystemTrayIcon::Trigger)
@@ -37,7 +43,15 @@ NoteWindows::NoteWindows()
 
 NoteWindows::~NoteWindows()
 {
-    for(MainWindow *window: windows)
+    delete trayNotesMenu;
+    delete trayNotesMenu;
+    delete trayIcon;
+    delete newNoteAction;
+    delete showAction;
+    delete quitAction;
+    delete minimiseAction;
+
+    for(auto window: windows)
         delete window;
 }
 
@@ -45,25 +59,27 @@ void NoteWindows::exec()
 {
     d.Connect();
 
+    trayNotesMenu->setTitle(QString("Total %1").arg(d.notes_count()));
 
     if(d.notes_count() != 0)
     {
         for (Data dat : d.getData()) {
-
-            win = new MainWindow(dat);
+            win = new NoteData(dat);
             windows.insert(win);
         }
     }
     else {
-        win = new MainWindow();
+        win = new NoteData();
         windows.insert(win);
     }
 
-    for(auto win: windows)
+    for(NoteData *win: windows)
     {
-        connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
-        connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
-        getIntoFocus(win);
+        trayNotesMenu->addAction(win->action);
+        connect(win->action, &QAction::triggered, [this,win] () { this->getIntoFocus(win->window); });
+        connect(win->window, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
+        connect(win->window->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
+        getIntoFocus(win->window);
     }
 
     trayIcon->show();
@@ -71,8 +87,7 @@ void NoteWindows::exec()
 
 void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
 {
-
-    win = (MainWindow *)parent;
+    MainWindow *window = (MainWindow *)parent;
     switch(item)
     {
         case MenuItem::NewNote:
@@ -80,33 +95,56 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
             break;
 
         case MenuItem::DeleteNote:
-            if(deleteNote(win->d.id()))
+            if(deleteNote(window->d.id()))
             {
-                win->close();
-                windows.erase(win);
-                delete win;
+                for(auto win1: windows)
+                {
+                    if(win1->window == window)
+                    {
+                        this->win = win1;
+                        trayNotesMenu->removeAction(this->win->action);
+                        this->win->window->close();
+                        windows.erase(this->win);
+                        delete this->win;
+                        this->win = nullptr;
+                        break;
+                    }
+                    else
+                    {
+                        qDebug() << "Window not found" << window->d.id();
+                    }
+                }
             }
             break;
 
         case MenuItem::BgColorNote:
-            win->updateBgColor();
+            window->updateBgColor();
             break;
 
         case MenuItem::BoldNote:
-            win->boldText(status);
+            window->boldText(status);
             break;
 
         case MenuItem::ItalicNote:
-            win->italicText(status);
+            window->italicText(status);
             break;
 
         case MenuItem::UnderlineNote:
-            win->underlineText(status);
+            window->underlineText(status);
+            break;
+
+        case MenuItem::TextColorNote:
+            window->colorText();
+            break;
+
+        case MenuItem::StrikeOutNote:
+            window->strikeoutNote(status);
+            qDebug() <<"strike icon";
             break;
     }
 }
 
-void NoteWindows::iconActivated()
+void NoteWindows::iconActivated(std::int32_t id)
 {
     qDebug() << "Tray Icon Activated";
 }
@@ -124,17 +162,19 @@ void NoteWindows::showTrayAction(bool status)
 void NoteWindows::minimiseTrayAction(bool status)
 {
     for(auto win: windows)
-        win->close();
+        win->window->close();
 }
 
 void NoteWindows::NewNote()
 {
-    win = new MainWindow();
-    getIntoFocus(win);
-    connect(win, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
-    connect(win->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
-    windows.insert(win);
+    this->win = new NoteData();
+    getIntoFocus(this->win->window);
 
+    trayNotesMenu->addAction(win->action);
+    connect(this->win->action, &QAction::triggered, [this] () { getIntoFocus(this->win->window); });
+    connect(this->win->window, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
+    connect(this->win->window->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
+    windows.insert(this->win);
 }
 
 bool NoteWindows::deleteNote(std::int32_t id){
@@ -143,9 +183,8 @@ bool NoteWindows::deleteNote(std::int32_t id){
 
 void NoteWindows::ShowFocus()
 {
-    qDebug() << "Activated: ";
     for(auto win: windows)
-        getIntoFocus(win);
+        getIntoFocus(win->window);
 }
 
 std::int32_t NoteWindows::updateNote(Data &data)

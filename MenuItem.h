@@ -9,7 +9,9 @@ enum class MenuItem
     BgColorNote,
     BoldNote,
     ItalicNote,
-    UnderlineNote
+    UnderlineNote,
+    TextColorNote,
+    StrikeOutNote
 };
 
 #endif /* MENUITEM_H */

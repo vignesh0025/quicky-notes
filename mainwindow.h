@@ -14,6 +14,7 @@
 #include <QMoveEvent>
 #include <QTextCursor>
 #include <QFont>
+#include <QBrush>
 
 #include "Data.h"
 #include "quicky_toolbar.h"
@@ -35,6 +36,8 @@ public:
     void boldText(bool status);
     void italicText(bool status);
     void underlineText(bool status);
+    void strikeoutNote(bool status);
+    void colorText();
 
     bool self_gui_update_ongoing;
     Data d;

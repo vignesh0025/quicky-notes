@@ -14,6 +14,8 @@ QuickyToolbar::QuickyToolbar(QWidget *parent) :
     connect(ui->actionBoldBtn, &QAction::triggered, this, &QuickyToolbar::boldMenuAction);
     connect(ui->actionItalicBtn, &QAction::triggered, this, &QuickyToolbar::italicMenuAction);
     connect(ui->actionUnderlineBtn, &QAction::triggered, this, &QuickyToolbar::underlineMenuAction);
+    connect(ui->textColorBtn, &QAction::triggered, this, &QuickyToolbar::textColorMenuAction);
+    connect(ui->strikeoutNoteBtn, &QAction::triggered, this, &QuickyToolbar::strikeoutMenuAction);
 }
 
 QuickyToolbar::~QuickyToolbar()
@@ -49,4 +51,14 @@ void QuickyToolbar::italicMenuAction(bool status)
 void QuickyToolbar::underlineMenuAction(bool status)
 {
     emit menuActionTriggered(status,parent, MenuItem::UnderlineNote);
+}
+
+void QuickyToolbar::textColorMenuAction(bool status)
+{
+    emit menuActionTriggered(status,parent, MenuItem::TextColorNote);
+}
+
+void QuickyToolbar::strikeoutMenuAction(bool status)
+{
+    emit menuActionTriggered(status,parent, MenuItem::StrikeOutNote);
 }

@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/icons">
         <file>color_icon.png</file>
+        <file>text_color_icon.png</file>
+        <file>strike_out.png</file>
+        <file>tray_icon.png</file>
     </qresource>
 </RCC>

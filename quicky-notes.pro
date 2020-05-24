@@ -1,4 +1,4 @@
-QT       += core gui sql
+QT       += core gui sql testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,14 +21,18 @@ SOURCES += \
     dataclient.cpp \
     Data.cpp \
     quicky_toolbar.cpp \
-    NoteWindows.cpp
+    NoteWindows.cpp \
+    NoteData.cpp \
+    testGui.cpp
 
 HEADERS += \
     mainwindow.h \
     dataclient.h \
     Data.h \
     quicky_toolbar.h \
-    NoteWindows.h
+    NoteWindows.h \
+    NoteData.h \
+    testGui.h
 
 FORMS += \
     mainwindow.ui \

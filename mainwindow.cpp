@@ -18,7 +18,7 @@ MainWindow::MainWindow(Data data, QWidget *parent)
 
     d = data;
 
-    timer.setInterval(1000);
+    timer.setInterval(3000);
     timer.setSingleShot(true);
 
     // Perform UI additions before adding data
@@ -37,6 +37,7 @@ MainWindow::MainWindow(Data data, QWidget *parent)
 void MainWindow::updateUI()
 {
     this->ui->id->display(d.id());
+    this->setWindowTitle(d.title());
     this->ui->title->setText(d.title());
     this->ui->notes->setHtml(d.notes());
     this->ui->statusbar->showMessage(d.datetime());
@@ -76,32 +77,21 @@ void MainWindow::timeOut()
     d.setId(emit noteUpdated(d));
 
     this->ui->id->display(d.id());
+    this->setWindowTitle(d.title());
+
     qDebug() << "Returned id " << d.id();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *ev)
 {
     if(d.id() != INVALID_NOTE)
-    {
         timer.start();
-        qDebug() << "Resized";
-    }
-    else {
-        qDebug() << "Invalid Note";
-    }
 }
 
 void MainWindow::moveEvent(QMoveEvent *ev)
 {
     if(d.id() != INVALID_NOTE)
-    {
         timer.start();
-        qDebug() << "Moved";
-    }
-    else {
-        qDebug() << "Invalid Note";
-    }
-
 }
 
 void MainWindow::updateBgColor()
@@ -111,13 +101,7 @@ void MainWindow::updateBgColor()
     this->ui->title->setStyleSheet("background-color: " + color.name());
 
     if(d.id() != INVALID_NOTE)
-    {
         timer.start();
-        qDebug() << "Moved";
-    }
-    else {
-        qDebug() << "Invalid Note";
-    }
 }
 
 
@@ -144,12 +128,28 @@ void MainWindow::italicText(bool status)
 
 void MainWindow::underlineText(bool status)
 {
-
     QTextCursor cursor = this->ui->notes->textCursor();
     QTextCharFormat fmt = cursor.blockCharFormat();
     fmt.setFontUnderline(status);
     cursor.mergeCharFormat(fmt);
 
     this->ui->notes->setFontUnderline(status);
+}
 
+void MainWindow::colorText()
+{
+    QTextCursor cursor = this->ui->notes->textCursor();
+    QTextCharFormat fmt = cursor.blockCharFormat();
+    fmt.setForeground(QColorDialog::getColor(Qt::black,this));
+    cursor.mergeCharFormat(fmt);
+}
+
+void MainWindow::strikeoutNote(bool status)
+{
+    QTextCursor cursor = this->ui->notes->textCursor();
+    QTextCharFormat fmt = cursor.blockCharFormat();
+    fmt.setFontStrikeOut(status);
+    cursor.mergeCharFormat(fmt);
+
+    this->ui->notes->setFontUnderline(false);
 }

@@ -153,3 +153,9 @@ void MainWindow::strikeoutNote(bool status)
 
     this->ui->notes->setFontUnderline(false);
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    emit windowClosed(this);
+    event->accept();
+}

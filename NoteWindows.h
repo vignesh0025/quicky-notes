@@ -26,6 +26,7 @@ class NoteWindows : public QObject
 {
 
     void getIntoFocus(MainWindow *win);
+    void PrepareWindow(NoteData *win);
 
 public:
     NoteWindows();
@@ -34,7 +35,6 @@ public:
     void exec();
     void NewNote();
     void ShowFocus();
-
 
 public:
     DataClient d;
@@ -63,7 +63,8 @@ public slots:
     void minimiseTrayAction(bool status);
     void trayNoteTriggered();
     std::int32_t updateNote(Data &d);
-    bool deleteNote(std::int32_t id);
+    void deleteNote(MainWindow *win1, std::int32_t id = INVALID_NOTE);
+    void MainWindowClosed(MainWindow *window);
 
     void finished();
 };

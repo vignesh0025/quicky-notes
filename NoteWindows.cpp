@@ -59,27 +59,17 @@ void NoteWindows::exec()
 {
     d.Connect();
 
-    trayNotesMenu->setTitle(QString("Total %1").arg(d.notes_count()));
 
-    if(d.notes_count() != 0)
+    // If there are no notes, create a blank note and show
+    if(d.notes_count() == 0)
     {
-        for (Data dat : d.getData()) {
-            win = new NoteData(dat);
-            windows.insert(win);
-        }
-    }
-    else {
         win = new NoteData();
-        windows.insert(win);
-    }
+        PrepareWindow(win);
 
-    for(NoteData *win: windows)
-    {
-        trayNotesMenu->addAction(win->action);
-        connect(win->action, &QAction::triggered, [this,win] () { this->getIntoFocus(win->window); });
-        connect(win->window, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
-        connect(win->window->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
-        getIntoFocus(win->window);
+    }
+    else for (Data dat : d.getData()) {
+        win = new NoteData(dat);
+        PrepareWindow(win);
     }
 
     trayIcon->show();
@@ -95,26 +85,7 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
             break;
 
         case MenuItem::DeleteNote:
-            if(deleteNote(window->d.id()))
-            {
-                for(auto win1: windows)
-                {
-                    if(win1->window == window)
-                    {
-                        this->win = win1;
-                        trayNotesMenu->removeAction(this->win->action);
-                        this->win->window->close();
-                        windows.erase(this->win);
-                        delete this->win;
-                        this->win = nullptr;
-                        break;
-                    }
-                    else
-                    {
-                        qDebug() << "Window not found" << window->d.id();
-                    }
-                }
-            }
+            deleteNote(window, window->d.id());
             break;
 
         case MenuItem::BgColorNote:
@@ -142,6 +113,8 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
             qDebug() <<"strike icon";
             break;
     }
+
+    trayNotesMenu->setTitle(QString("Total %1").arg(d.notes_count()));
 }
 
 void NoteWindows::iconActivated(std::int32_t id)
@@ -167,18 +140,40 @@ void NoteWindows::minimiseTrayAction(bool status)
 
 void NoteWindows::NewNote()
 {
-    this->win = new NoteData();
-    getIntoFocus(this->win->window);
+    // If a blank window is already open, show it rather than creating new window
+    for(auto win: windows)
+        if(win->window->d.id() == INVALID_NOTE)
+        {
+            qDebug() << "Showing already existing new window";
+            getIntoFocus(win->window);
+        }
+        else
+        {
+            this->win = new NoteData();
+            PrepareWindow(this->win);
+        }
 
-    trayNotesMenu->addAction(win->action);
-    connect(this->win->action, &QAction::triggered, [this] () { getIntoFocus(this->win->window); });
-    connect(this->win->window, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
-    connect(this->win->window->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
-    windows.insert(this->win);
 }
 
-bool NoteWindows::deleteNote(std::int32_t id){
-    return d.deleteNote(id);
+void NoteWindows::deleteNote(MainWindow *window, std::int32_t id)
+{
+    bool check = (id == INVALID_NOTE)? true :  d.deleteNote(id);
+
+    if(check)
+    {
+        // Duplicated loop #LOOPCLOSEWINDOW
+        for(auto win1: windows)
+        {
+            if(win1->window == window)
+            {
+                windows.erase(win1);
+                trayNotesMenu->removeAction(win1->action);
+                win1->window->close();
+                delete win1;
+                break;
+            }
+        }
+    }
 }
 
 void NoteWindows::ShowFocus()
@@ -203,15 +198,66 @@ void NoteWindows::getIntoFocus(MainWindow *win)
     {
         win->show();
         win->raise();
-        win->setFocusPolicy(Qt::TabFocus);
         win->setFocus();
         win->activateWindow();
     }
     else if(!win->hasFocus())
     {
         win->raise();
-        win->setFocusPolicy(Qt::TabFocus);
         win->setFocus();
         win->activateWindow();
     }
+    else {
+
+    }
+}
+
+void NoteWindows::PrepareWindow(NoteData *win1)
+{
+    // Connect the window close event to the event handler in this class
+    connect(win1->window, &MainWindow::windowClosed, this, &NoteWindows::MainWindowClosed);
+
+    // Connect Note List in Tray Menu to the corresponding window to show the window
+    connect(win1->action, &QAction::triggered, [this, win1] () { this->getIntoFocus(win1->window); });
+
+    // Connect the note update event from window to the Note updation function in this class
+    connect(win1->window, &MainWindow::noteUpdated, this, &NoteWindows::updateNote);
+
+    // Connect the toolbar in every window to same handler in this Class and then route to the corresponding window
+    connect(win1->window->toolbar, &QuickyToolbar::menuActionTriggered, this, &NoteWindows::menuAction);
+
+    // Add the corresponding menu to tray
+    trayNotesMenu->addAction(win1->action);
+
+    // Show the window
+    getIntoFocus(win->window);
+
+    // Insert the window into the set we have
+    windows.insert(win);
+}
+
+
+void NoteWindows::MainWindowClosed(MainWindow *window)
+{
+
+    // When a Unused note is closed, delete the node rather than closing it
+    if(window->d.id() == INVALID_NOTE)
+    {
+        qDebug() << "Delete unused window";
+
+        // Duplicated loop #LOOPCLOSEWINDOW
+        for(auto win1: windows)
+        {
+            if(win1->window == window)
+            {
+                windows.erase(win1);
+                trayNotesMenu->removeAction(win1->action);
+                window->setAttribute( Qt::WA_DeleteOnClose );
+                break;
+            }
+            else qDebug() << "Window not found" << window->d.id();
+        }
+    }
+
+    trayNotesMenu->setTitle(QString("Total %1").arg(d.notes_count()));
 }

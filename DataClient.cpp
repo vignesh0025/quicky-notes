@@ -158,7 +158,8 @@ void DataClient::connectWindow(MainWindow *win)
 
 bool DataClient::deleteNote(std::int32_t id)
 {
-    if(-1 != id)
+    // Delete only the ID is valid and not for blank window
+    if(INVALID_NOTE != id)
     {
         query->prepare("DELETE FROM notes_table WHERE id=:id;");
         query->bindValue(":id", id);
@@ -172,8 +173,13 @@ bool DataClient::deleteNote(std::int32_t id)
             qDebug() << GetError();
         }
     }
-    else qDebug() << "Non-existant note";
+    else
+    {
+        qDebug() << "Non-existant note";
 
+        // Note may note be existant in database but blank window may be present
+        result = true;
+    }
     return result;
 }
 

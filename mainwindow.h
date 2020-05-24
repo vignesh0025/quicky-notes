@@ -15,6 +15,7 @@
 #include <QTextCursor>
 #include <QFont>
 #include <QBrush>
+#include <QCloseEvent>
 
 #include "Data.h"
 #include "quicky_toolbar.h"
@@ -47,6 +48,7 @@ public:
 protected:
     void resizeEvent(QResizeEvent *ev) override;
     void moveEvent(QMoveEvent *ev) override;
+    void closeEvent(QCloseEvent *event) override;
 
 public:
     QuickyToolbar *toolbar;
@@ -57,6 +59,7 @@ public slots:
 
 signals:
     int32_t noteUpdated(Data &d);
+    void windowClosed(MainWindow *win);
 
 private:
     Ui::MainWindow *ui;

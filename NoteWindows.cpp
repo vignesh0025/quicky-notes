@@ -110,7 +110,11 @@ void NoteWindows::menuAction(bool status, QWidget *parent, MenuItem item)
 
         case MenuItem::StrikeOutNote:
             window->strikeoutNote(status);
-            qDebug() <<"strike icon";
+            break;
+
+        case MenuItem::PastePlainNote:
+            window->pasteAsPlainText();
+            qDebug() <<"plain icon";
             break;
     }
 
@@ -146,12 +150,11 @@ void NoteWindows::NewNote()
         {
             qDebug() << "Showing already existing new window";
             getIntoFocus(win->window);
+            return;
         }
-        else
-        {
-            this->win = new NoteData();
-            PrepareWindow(this->win);
-        }
+
+    this->win = new NoteData();
+    PrepareWindow(this->win);
 
 }
 
@@ -194,22 +197,26 @@ void NoteWindows::finished()
 
 void NoteWindows::getIntoFocus(MainWindow *win)
 {
-    if(!win->isVisible())
-    {
-        win->show();
-        win->raise();
-        win->setFocus();
-        win->activateWindow();
-    }
-    else if(!win->hasFocus())
-    {
-        win->raise();
-        win->setFocus();
-        win->activateWindow();
-    }
-    else {
+    qDebug("Quicky: Raise Window");
+    win->show();
+    win->raise();
+    win->setFocus();
+    win->activateWindow();
 
-    }
+    /*
+       if(!win->isVisible())
+       {
+       }
+       else if(!win->hasFocus())
+       {
+       win->raise();
+       win->setFocus();
+       win->activateWindow();
+       }
+       else {
+
+       }
+       */
 }
 
 void NoteWindows::PrepareWindow(NoteData *win1)

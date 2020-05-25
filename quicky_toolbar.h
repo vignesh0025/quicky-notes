@@ -29,6 +29,7 @@ private slots:
     void underlineMenuAction(bool status);
     void textColorMenuAction(bool status);
     void strikeoutMenuAction(bool status);
+    void pastePlainMenuAction(bool status);
 
 signals:
     void menuActionTriggered(bool status, QWidget *parent, MenuItem item);

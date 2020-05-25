@@ -11,7 +11,8 @@ enum class MenuItem
     ItalicNote,
     UnderlineNote,
     TextColorNote,
-    StrikeOutNote
+    StrikeOutNote,
+    PastePlainNote
 };
 
 #endif /* MENUITEM_H */

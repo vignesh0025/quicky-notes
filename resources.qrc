@@ -4,5 +4,6 @@
         <file>text_color_icon.png</file>
         <file>strike_out.png</file>
         <file>tray_icon.png</file>
+        <file>paste_as_text_icon.jpg</file>
     </qresource>
 </RCC>

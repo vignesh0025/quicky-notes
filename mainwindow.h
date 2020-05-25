@@ -16,6 +16,7 @@
 #include <QFont>
 #include <QBrush>
 #include <QCloseEvent>
+#include <QClipboard>
 
 #include "Data.h"
 #include "quicky_toolbar.h"
@@ -39,6 +40,7 @@ public:
     void underlineText(bool status);
     void strikeoutNote(bool status);
     void colorText();
+    void pasteAsPlainText();;
 
     bool self_gui_update_ongoing;
     Data d;

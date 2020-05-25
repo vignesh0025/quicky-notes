@@ -12,6 +12,7 @@ MainWindow::MainWindow(Data data, QWidget *parent)
     : QMainWindow(parent, Qt::Tool)
     , ui(new Ui::MainWindow)
 {
+    setFocusPolicy(Qt::ClickFocus);
     ui->setupUi(this);
 
     self_gui_update_ongoing = true;
@@ -158,4 +159,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     emit windowClosed(this);
     event->accept();
+}
+
+void MainWindow::pasteAsPlainText()
+{
+    QClipboard *brd = QGuiApplication::clipboard();
+    QTextCursor cursor = this->ui->notes->textCursor();
+    cursor.insertText(brd->text());
 }

@@ -3,13 +3,21 @@
 #include <cstdint>
 #include <vector>
 
-DataClient::DataClient(QString file)
+DataClient::DataClient()
 {
-    databaseFile = file;
+
+#ifdef  Q_OS_LINUX
+
+    databaseFile = QDir(QString(getenv("HOME"))).filePath("mydb.db");
+#elif defined Q_OS_WINDOWS
+    databaseFile = QDir(QStandardPaths::displayName(QStandardPaths::HomeLocation)).filePath("mydb.db");
+#endif
+
+    qDebug() << databaseFile << QStandardPaths::displayName(QStandardPaths::HomeLocation);
 
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(file);
-    db.setHostName("vd-san");
+    db.setDatabaseName(databaseFile);
+    db.setHostName("VS-SAMA");
 }
 
 

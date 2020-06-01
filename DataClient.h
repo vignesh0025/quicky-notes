@@ -9,12 +9,12 @@
 #include <vector>
 #include <QTimer>
 #include <QThread>
+#include <QStandardPaths>
+#include <QDir>
 
 #include "Data.h"
 #include "mainwindow.h"
 #include "qobjectdefs.h"
-
-#define FILENAME "./mydb.db"
 
 #ifndef DATACLIENT_H
 #define DATACLIENT_H
@@ -24,7 +24,7 @@ class DataClient : public QObject
 
     Q_OBJECT
 public:
-    DataClient(QString file = FILENAME);
+    DataClient();
     ~DataClient();
     bool Connect();
     QString GetError() const;

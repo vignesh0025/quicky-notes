@@ -10,7 +10,7 @@ DataClient::DataClient()
 
     databaseFile = QDir(QString(getenv("HOME"))).filePath("mydb.db");
 #elif defined Q_OS_WINDOWS
-    databaseFile = QDir(QStandardPaths::displayName(QStandardPaths::HomeLocation)).filePath("mydb.db");
+    databaseFile = QDir(QDir::home()).filePath("mydb.db");
 #endif
 
     qDebug() << databaseFile << QStandardPaths::displayName(QStandardPaths::HomeLocation);
